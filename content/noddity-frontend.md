@@ -19,13 +19,13 @@ That sounds like it could be a lot of XMLHttpRequests to be making per-page load
 How content is cached
 ========
 
-All of the content access is done by the [noddity-butler](https://github.com/TehShrike/noddity-butler) module, which caches all content in a [LevelUP](https://github.com/rvagg/node-levelup) store.  The RSS server uses the same butler module - the main difference being that the RSS server is backed by an actual LevelDB store, while in the browser I'm just using the IndexedDB-backed [fruitdown](https://github.com/nolanlawson/fruitdown) storage engine, which is backed by IndexedDB on all browsers ([even Safari!]((http://caniuse.com/#feat=indexeddb))).
+All of the content access is done by the [noddity-butler](https://github.com/TehShrike/noddity-butler) module, which caches all content in a [LevelUP](https://github.com/rvagg/node-levelup) store.  The RSS server uses the same butler module - the main difference being that the RSS server is backed by an actual LevelDB store, while in the browser I'm just using the IndexedDB-backed [fruitdown](https://github.com/nolanlawson/fruitdown) storage engine, which is backed by IndexedDB on all browsers ([even Safari!](http://caniuse.com/#feat=indexeddb)).
 
 Theoretically, there are [potential storage concerns](https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API/Browser_storage_limits_and_eviction_criteria), but I'm going to wait to worry about that until I have a blog or wiki approaching 20MiB of total markdown content.
 
 The butler will always serve up a locally cached version if one is available, meaning that Noddity will prefer to display old content immediately rather than an up-to-date version a second from now.
 
-The butler does go out and refresh content that is over a certain age - if an old version of a page was displayed because someone re-viseted a page they'd seen before, a few seconds later the butler reports a new version of that same page, Noddity will drop the new version into the page the user is viewing.
+The butler does go out and refresh content that is over a certain age - if an old version of a page was displayed because someone re-visited a page they'd seen before, a few seconds later the butler reports a new version of that same page, Noddity will drop the new version into the page the user is viewing.
 
 At the time of writing, the index.json file is refreshed if the cached list is older than 10 minutes, and posts are refreshed if the cached version is over 12 hours old.  I expect to be tweaking this in the future, and will probably be adding finer-grained control - increasing the time between refreshes for posts, but refreshing more often if the user is interacting with a particular post.
 
